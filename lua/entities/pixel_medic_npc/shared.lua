@@ -5,6 +5,7 @@ ENT.Category = "PIXEL Medic"
 ENT.Author = "Tom."
 ENT.AutomaticFrameAdvance = true
 ENT.Spawnable = true
+ENT.IsPIXELMedicNPC = true
 
 ENT.Config = {
     HealthCost = 2000,

@@ -26,43 +26,59 @@ function ENT:OnTakeDamage()
 	return false
 end
 
-net.Receive("PIXEL.Medic.GiveHealth", function(length, activator)
-	local npc = net.ReadEntity()
-	if not IsValid(npc) then return end
-	if npc:GetClass() ~= "pixel_medic_npc" then return end
-	if not npc.Config.MaxUseDistance or activator:GetPos():Distance(npc:GetPos()) > npc.Config.MaxUseDistance then return end
-
-	if not activator:canAfford(npc.Config.HealthCost) then
-		DarkRP.notify(activator, 1, 4, "You can't afford that.")
-		return ""
+local function isPlayerNearNpc(ply, npc)
+	if not IsValid(npc) then
+		return false
 	end
 
-	if activator:Health() < npc.Config.MaxHealth then
-		activator:addMoney(-npc.Config.HealthCost)
-		activator:SetHealth(npc.Config.MaxHealth)
-		DarkRP.notify(activator, 0, 4, "Purchased health for " .. DarkRP.formatMoney(npc.Config.HealthCost) .. "!")
+	if not npc.IsPIXELMedicNPC then
+		return false
+	end
+
+	if not npc.Config.MaxUseDistance or ply:GetPos():Distance(npc:GetPos()) > npc.Config.MaxUseDistance then
+		return false
+	end
+
+	return true
+end
+
+net.Receive("PIXEL.Medic.GiveHealth", function(_, ply)
+	local npc = net.ReadEntity()
+	if not isPlayerNearNpc(ply, npc) then
+		return
+	end
+
+	if not ply:canAfford(npc.Config.HealthCost) then
+		DarkRP.notify(ply, 1, 4, "You can't afford that.")
+		return
+	end
+
+	if ply:Health() < npc.Config.MaxHealth then
+		ply:addMoney(-npc.Config.HealthCost)
+		ply:SetHealth(npc.Config.MaxHealth)
+		DarkRP.notify(ply, 0, 4, "Purchased health for " .. DarkRP.formatMoney(npc.Config.HealthCost) .. "!")
 	else
-		DarkRP.notify(activator, 1, 4, "You already have full health.")
+		DarkRP.notify(ply, 1, 4, "You already have full health.")
 	end
 end)
 
-net.Receive("PIXEL.Medic.GiveArmour", function(length, activator)
+net.Receive("PIXEL.Medic.GiveArmour", function(_, ply)
 	local npc = net.ReadEntity()
-	if not IsValid(npc) then return end
-	if npc:GetClass() ~= "pixel_medic_npc" then return end
-	if not npc.Config.MaxUseDistance or activator:GetPos():Distance(npc:GetPos()) > npc.Config.MaxUseDistance then return end
-
-	if not activator:canAfford(npc.Config.ArmourCost) then
-		DarkRP.notify(activator, 1, 4, "You can't afford that.")
-		return ""
+	if not isPlayerNearNpc(ply, npc) then
+		return
 	end
 
-	if activator:Armor() < npc.Config.MaxArmour then
-		activator:addMoney(-npc.Config.ArmourCost)
-		activator:SetArmor(npc.Config.MaxArmour)
-		DarkRP.notify(activator, 0, 4, "Purchased Armor for " .. DarkRP.formatMoney(npc.Config.ArmourCost) .. "!")
+	if not ply:canAfford(npc.Config.ArmourCost) then
+		DarkRP.notify(ply, 1, 4, "You can't afford that.")
+		return
+	end
+
+	if ply:Armor() < npc.Config.MaxArmour then
+		ply:addMoney(-npc.Config.ArmourCost)
+		ply:SetArmor(npc.Config.MaxArmour)
+		DarkRP.notify(ply, 0, 4, "Purchased Armor for " .. DarkRP.formatMoney(npc.Config.ArmourCost) .. "!")
 	else
-		DarkRP.notify(activator, 1, 4, "You already have full armor.")
+		DarkRP.notify(ply, 1, 4, "You already have full armor.")
 	end
 end)
 
