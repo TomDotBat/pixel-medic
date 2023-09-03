@@ -13,7 +13,7 @@ PIXEL.RegisterFont("Medic.Description", "Open Sans SemiBold", 18)
 
 net.Receive("PIXEL.Medic.OpenMenu", function()
     local npc = net.ReadEntity()
-    if not (npc and IsValid(npc)) then return end
+    if not IsValid(npc) then return end
 
     if IsValid(PIXEL.MedicMenu) then
         PIXEL.MedicMenu:Remove()
@@ -21,6 +21,7 @@ net.Receive("PIXEL.Medic.OpenMenu", function()
     end
 
     local frame = vgui.Create("PIXEL.Frame")
+    PIXEL.MedicMenu = frame
     frame:SetTitle("Medic")
     frame:SetSize(PIXEL.Scale(260), PIXEL.Scale(124))
     frame:Center()
@@ -28,7 +29,6 @@ net.Receive("PIXEL.Medic.OpenMenu", function()
 
     local btns = vgui.Create("Panel", frame)
     btns:Dock(BOTTOM)
-
     local btnPad = PIXEL.Scale(4)
     btns:DockMargin(btnPad, btnPad, btnPad, btnPad)
     btns.Paint = nil
@@ -68,5 +68,3 @@ net.Receive("PIXEL.Medic.OpenMenu", function()
         frame:Remove()
     end
 end)
-
-PIXEL.MedicMenu = frame

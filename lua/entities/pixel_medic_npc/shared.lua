@@ -1,9 +1,8 @@
-
 ENT.Type = "ai"
 ENT.Base = "base_ai"
 ENT.PrintName = "Medic NPC"
 ENT.Category = "PIXEL Medic"
-ENT.Author = "Tom.bat"
+ENT.Author = "Tom."
 ENT.AutomaticFrameAdvance = true
 ENT.Spawnable = true
 
